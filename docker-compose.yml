@@ -1,0 +1,38 @@
+version: '3.4'
+
+services:
+  api:
+    build:
+      context: ${PWD}
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_HOST: "db"
+      POSTGRES_PORT: 5432
+    volumes:
+      - ${PWD}:/urlshortener
+    ports:
+      - "5000:5000"
+    links:
+      - db
+    command: bash -c "/usr/wait-for-it.sh --timeout=15 db:5432 -- python manage.py db migrate && python manage.py db upgrade && python app.py"
+
+  db:
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_HOST: "db"
+      POSTGRES_PORT: 5405
+    image: postgres:latest
+    networks:
+      - default
+    ports:
+      - 5405:5432
+    restart: always
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:
