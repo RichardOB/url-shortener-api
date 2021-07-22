@@ -3,7 +3,7 @@ import datetime
 import sqlalchemy
 
 from http import HTTPStatus
-from flask import request, jsonify, make_response, redirect
+from flask import request, jsonify, make_response
 from flask.blueprints import Blueprint
 from marshmallow import ValidationError
 from sqlalchemy.orm.exc import NoResultFound
@@ -51,7 +51,7 @@ def create_short_url():
         return {
             "status": 'success', 
             'url_hash': url_hash 
-        }, 201
+        }, HTTPStatus.CREATED
 
     except ValidationError as exc:
         return {
@@ -77,8 +77,11 @@ def get_short_url_redirect(url_hash):
         url_usage = shortened_url_usage_dao.create(shortened_url)
         #5. Commit to db
         db.session.commit()
-        #6. Return original url as Json response with http redirect.
-        return redirect(shortened_url.url, HTTPStatus.MOVED_PERMANENTLY)
+        #6. Return original url as Json response.
+        return {
+            "status": 'success', 
+            'url': shortened_url.url 
+        }, HTTPStatus.OK
 
     except TypeError:
         return {
