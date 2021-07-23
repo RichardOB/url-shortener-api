@@ -6,7 +6,8 @@ from api.exceptions.decode_exception import DecodeException
 
 
 # Note: The salt here should ideally be read from a config or environment file that 
-# is not committed to a code repository. 
+# is not committed to a code repository. The hash length should also be configurale and adjusted to find a middle
+# ground of maintaining shortness while avoiding possile hash collisions. 
 hashid_generator = Hashids(min_length=4, salt='eradicate-the-payday-poverty-cycle')
 
 def encode_number(number_to_encode:int) -> string:

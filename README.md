@@ -40,3 +40,9 @@ The URL Shortener API has been setup to make use of Docker so that the container
 6. wait-for-it.sh is an open source script used to ensure that the database container is up and running before the api container attempts to run DB migrations. A more robust approach should be taken to ensure that the container is up rather than waiting a pre determined amount of time.
 
 7. A database volume has been added to ensure persistency of data when the db container goes down.
+
+8. Unit and Integration tests. Unfortunately, I ran out of time and didn't take the plunge to use TDD. I would have loved to write unit tests (by making use of patch to mock and isolate functionality). I would have also used a sql lite database with test data in order to test the Data Access Object functionality.
+
+9. Hash Collisions. I took the approach of hashing the unique id used to store the Short URL. This hash is created as a length of 4 lower case character (total 26 characters), upper case characters (total 26 characters) or numerical digits (total 10 characters). This means that there are a total of 62 possible characters to use in the hash. This means that we are essentially converting a base 10 decimal numer to base 62. This means that the total possible permutations are 13 388 280 which may not be enough depending on the expected scale / traffic.
+
+10. Add Swagger documentation so that this API can be more easily integrated with other external clients.
